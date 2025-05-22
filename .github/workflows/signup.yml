@@ -73,13 +73,13 @@ jobs:
             console.log(`User JSON saved to ${path}`);
           })();
           EOF
-
       - name: Commit and push user JSON
         env:
           GH_PAT: ${{ secrets.CRUD_OPERATION_TOKEN }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin https://x-access-token:${GH_PAT}@github.com/me-soumen/portfolio.git
           git add database/${{ github.event.client_payload.username }}.json
           git commit -m "Sign up user ${{ github.event.client_payload.username }}"
-          git push https://x-access-token:${GH_PAT}@github.com/${{ github.repository }}.git
+          git push
