@@ -19,7 +19,7 @@ jobs:
 
       - name: Save user data to file
         env:
-          GH_TOKEN_SECRET: ${{ secrets.GH_TOKEN_SECRET }}
+          GH_TOKEN_SECRET: ${{ secrets.CRUD_OPERATION_TOKEN }}
           USERNAME: ${{ github.event.client_payload.username }}
           EMAIL: ${{ github.event.client_payload.email }}
           NAME: ${{ github.event.client_payload.name }}
@@ -53,7 +53,7 @@ jobs:
           }
 
           (async () => {
-            const githubToken = process.env.GH_TOKEN_SECRET;
+            const githubToken = process.env.CRUD_OPERATION_TOKEN;
             const password = process.env.PASSWORD;
 
             const encryptedPassword = await encryptTokenNode(githubToken, password);
