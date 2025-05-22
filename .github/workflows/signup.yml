@@ -19,14 +19,14 @@ jobs:
 
       - name: Save user data to file
         env:
-          GH_TOKEN_SECRET: ${{ secrets.CRUD_OPERATION_TOKEN }}
+          CRUD_TOKEN: ${{ secrets.CRUD_OPERATION_TOKEN }}
           USERNAME: ${{ github.event.client_payload.username }}
           EMAIL: ${{ github.event.client_payload.email }}
           NAME: ${{ github.event.client_payload.name }}
           PHONE: ${{ github.event.client_payload.phone }}
           PASSWORD: ${{ github.event.client_payload.password }}
         run: |
-          echo "Preparing user JSON"
+          echo "Encrypting password and saving user JSON..."
 
           node << 'EOF'
           const fs = require('fs');
@@ -41,7 +41,6 @@ jobs:
                 if (err) return reject(err);
 
                 const cipher = crypto.createCipheriv('aes-256-gcm', key, iv);
-
                 let encrypted = cipher.update(tokenBase64, 'utf8');
                 encrypted = Buffer.concat([encrypted, cipher.final()]);
                 const tag = cipher.getAuthTag();
@@ -53,10 +52,10 @@ jobs:
           }
 
           (async () => {
-            const githubToken = process.env.CRUD_OPERATION_TOKEN;
+            const token = process.env.CRUD_TOKEN;
             const password = process.env.PASSWORD;
 
-            const encryptedPassword = await encryptTokenNode(githubToken, password);
+            const encryptedPassword = await encryptTokenNode(token, password);
 
             const userData = {
               username: process.env.USERNAME,
@@ -68,7 +67,7 @@ jobs:
             };
 
             const path = `database/${userData.username}.json`;
-
+            fs.mkdirSync("database", { recursive: true });
             fs.writeFileSync(path, JSON.stringify(userData, null, 2));
 
             console.log(`User JSON saved to ${path}`);
@@ -76,9 +75,11 @@ jobs:
           EOF
 
       - name: Commit and push user JSON
+        env:
+          GH_PAT: ${{ secrets.CRUD_OPERATION_TOKEN }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add database/${{ github.event.client_payload.username }}.json
           git commit -m "Sign up user ${{ github.event.client_payload.username }}"
-          git push
+          git push https://x-access-token:${GH_PAT}@github.com/${{ github.repository }}.git
