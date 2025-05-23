@@ -77,7 +77,8 @@ jobs:
         env:
           GH_PAT: ${{ secrets.CRUD_OPERATION_TOKEN }}
         run: |
-          git config --global user.name "Soumen Mukherjee"
+          echo process.env.GH_PAT
+          git config --global user.name "me-soumen"
           git config --global user.email "me.soumen02@gmail.com"
           git remote set-url origin https://x-access-token:${GH_PAT}@github.com/me-soumen/portfolio.git
           git add database/${{ github.event.client_payload.username }}.json
