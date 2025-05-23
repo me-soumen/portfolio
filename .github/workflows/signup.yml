@@ -75,7 +75,7 @@ jobs:
           EOF
       - name: Commit and push user JSON
         env:
-          STORAGE_PAT: ${{ secrets.CRUD_OPERATION_TOKEN }}
+          STORAGE_PAT: ${{ secrets.STORAGE_CRUD_FROM_PORTFOLIO }}
         run: |
           git config --global user.name "me-soumen"
           git config --global user.email "me.soumen02@gmail.com"
