@@ -19,7 +19,7 @@ jobs:
 
       - name: Save user data to file
         env:
-          CRUD_TOKEN: ${{ secrets.CRUD_OPERATION_TOKEN }}
+          STORAGE_TOKEN: ${{ secrets.STORAGE_CRUD_FROM_PORTFOLIO }}
           USERNAME: ${{ github.event.client_payload.username }}
           EMAIL: ${{ github.event.client_payload.email }}
           NAME: ${{ github.event.client_payload.name }}
@@ -52,7 +52,7 @@ jobs:
           }
 
           (async () => {
-            const token = btoa(process.env.CRUD_TOKEN);
+            const token = btoa(process.env.STORAGE_TOKEN);
             const password = process.env.PASSWORD;
 
             const encryptedPassword = await encryptTokenNode(token, password);
@@ -75,12 +75,11 @@ jobs:
           EOF
       - name: Commit and push user JSON
         env:
-          GH_PAT: ${{ secrets.CRUD_OPERATION_TOKEN }}
+          STORAGE_PAT: ${{ secrets.CRUD_OPERATION_TOKEN }}
         run: |
-          echo process.env.GH_PAT
           git config --global user.name "me-soumen"
           git config --global user.email "me.soumen02@gmail.com"
-          git remote set-url origin https://x-access-token:${GH_PAT}@github.com/me-soumen/portfolio.git
+          git remote set-url origin https://x-access-token:${STORAGE_PAT}@github.com/me-soumen/storage.git
           git add database/${{ github.event.client_payload.username }}.json
           git commit -m "Sign up user ${{ github.event.client_payload.username }}" || echo "Nothing to commit"
           git push origin HEAD
