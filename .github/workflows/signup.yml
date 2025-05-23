@@ -9,15 +9,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      - name: Save user data to file
+      - name: Clone storage repo
+        env:
+          STORAGE_PAT: ${{ secrets.STORAGE_CRUD_FROM_PORTFOLIO }}
+        run: |
+          git clone https://x-access-token:${STORAGE_PAT}@github.com/me-soumen/storage.git
+          cd storage
+          mkdir -p database
+
+      - name: Build user JSON and encrypt
+        working-directory: ./storage
         env:
           STORAGE_TOKEN: ${{ secrets.STORAGE_CRUD_FROM_PORTFOLIO }}
           USERNAME: ${{ github.event.client_payload.username }}
@@ -73,13 +79,12 @@ jobs:
             console.log(`User JSON saved to ${path}`);
           })();
           EOF
-      - name: Commit and push user JSON
-        env:
-          STORAGE_PAT: ${{ secrets.STORAGE_CRUD_FROM_PORTFOLIO }}
+
+      - name: Commit and push user JSON to storage
+        working-directory: ./storage
         run: |
           git config --global user.name "me-soumen"
           git config --global user.email "me.soumen02@gmail.com"
-          git remote set-url origin https://x-access-token:${STORAGE_PAT}@github.com/me-soumen/storage.git
           git add database/${{ github.event.client_payload.username }}.json
           git commit -m "Sign up user ${{ github.event.client_payload.username }}" || echo "Nothing to commit"
-          git push origin HEAD
+          git push
