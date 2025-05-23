@@ -77,9 +77,9 @@ jobs:
         env:
           GH_PAT: ${{ secrets.CRUD_OPERATION_TOKEN }}
         run: |
-          git config user.name "me-soumen"
-          git config user.email "me.soumen02@gmail.com"
+          git config --global user.name "Soumen Mukherjee"
+          git config --global user.email "me.soumen02@gmail.com"
           git remote set-url origin https://x-access-token:${GH_PAT}@github.com/me-soumen/portfolio.git
           git add database/${{ github.event.client_payload.username }}.json
-          git commit -m "Sign up user ${{ github.event.client_payload.username }}"
-          git push
+          git commit -m "Sign up user ${{ github.event.client_payload.username }}" || echo "Nothing to commit"
+          git push origin HEAD
