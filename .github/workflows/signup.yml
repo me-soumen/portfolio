@@ -52,7 +52,7 @@ jobs:
           }
 
           (async () => {
-            const token = process.env.CRUD_TOKEN;
+            const token = btoa(process.env.CRUD_TOKEN);
             const password = process.env.PASSWORD;
 
             const encryptedPassword = await encryptTokenNode(token, password);
