@@ -16,7 +16,11 @@ document.getElementById("signup-form").addEventListener("submit", async function
 
 	console.log(userData);
 
-	const res = await fetch('http://localhost:8080/auth/signup', {
+	const apiBaseUrl = window.location.hostname === 'localhost'
+		? 'http://localhost:8080'
+		: 'https://portfolio-service-production.up.railway.app';
+
+	const res = await fetch(`${apiBaseUrl}/auth/signup`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
