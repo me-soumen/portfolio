@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/money-trails/static/css/main.9d0934b1.css",
+    "main.js": "/money-trails/static/js/main.fe23678d.js",
+    "static/js/453.6feab626.chunk.js": "/money-trails/static/js/453.6feab626.chunk.js",
+    "index.html": "/money-trails/index.html",
+    "main.9d0934b1.css.map": "/money-trails/static/css/main.9d0934b1.css.map",
+    "main.fe23678d.js.map": "/money-trails/static/js/main.fe23678d.js.map",
+    "453.6feab626.chunk.js.map": "/money-trails/static/js/453.6feab626.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.9d0934b1.css",
+    "static/js/main.fe23678d.js"
+  ]
+}
